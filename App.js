@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
-    View,
-	Text
+    View
 } from 'react-native'
 import Header from './src/components/Header'
 import Post from './src/components/Post'

@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import {
     StyleSheet,
     View,
-    Text,
-    Dimensions,
-    Alert
+    Text
 } from 'react-native'
 
 class Comments extends Component {

@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 import Feed from './screens/Feed'
+import AddPhoto from './screens/AddPhoto'
 
 const Tab = createBottomTabNavigator()
 
@@ -19,19 +20,19 @@ export default props => {
                 }}
             >
                 <Tab.Screen
-                    name='AddPhoto' 
-                    component={Feed}
-                    options={() => ({
-                        tabBarIcon: ({ color }) =>
-                            <Icon name='camera' size={30} color={color} />
-                    })}           
-                />
-                <Tab.Screen
                     name='Feed' 
                     component={Feed} 
                     options={() => ({
                         tabBarIcon: ({ color }) =>
                             <Icon name='home' size={30} color={color} />
+                    })}           
+                />
+                <Tab.Screen
+                    name='AddPhoto' 
+                    component={AddPhoto}
+                    options={() => ({
+                        tabBarIcon: ({ color }) =>
+                            <Icon name='camera' size={30} color={color} />
                     })}           
                 />
                 <Tab.Screen

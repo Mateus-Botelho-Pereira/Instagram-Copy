@@ -1,75 +1,118 @@
 import React, { Component } from 'react'
 import {
-    StyleSheet,
     View,
     Text,
+    StyleSheet,
     TouchableOpacity,
     TextInput,
     Image,
     Dimensions,
-    ScrollView,
     Platform,
+    ScrollView,
     Alert,
+    PermissionsAndroid,
 } from 'react-native'
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker'
-
-class AddPhoto extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-          resourcePath: {},
-        };
+ 
+import {
+    launchCamera,
+    launchImageLibrary
+} from 'react-native-image-picker'
+ 
+ 
+export default class AddPhoto extends Component {
+    options = {
+        mediaType: 'photo',
+        maxWidth: 800,
+        maxHeight: 600
     }
 
-    openCamera = () => {
-        
-        launchCamera(options, response => {
-            console.log('Response = ', response)
+    state = {
+        uri: null,
+        base64: null,
+        comment: '',
+    }
 
-            if (response.didCancel) {
-                console.log('User cancelled image picker')
-            } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error)
-            } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton)
-            } else {
-                let source = response
-                this.setState({
-                  resourcePath: source,
-                })
+    requestCameraPermission = async () => {
+        if (Platform.OS === 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                title: 'Camera Permission',
+                message: 'App needs camera permission',
+                },
+                )
+                // If CAMERA Permission is granted
+                return granted === PermissionsAndroid.RESULTS.GRANTED;
+            } catch (err) {
+                console.warn(err);
+                return false;
+            }
+        } else return true;
+    }
+    
+    requestExternalWritePermission = async () => {
+        if (Platform.OS === 'android') {
+            try {
+                const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                {
+                title: 'External Storage Write Permission',
+                message: 'App needs write permission',
+                },
+                )
+                // If WRITE_EXTERNAL_STORAGE Permission is granted
+                return granted === PermissionsAndroid.RESULTS.GRANTED;
+            } catch (err) {
+                console.warn(err);
+                alert('Write permission err', err)
+            }
+            return false;
+        } else return true;
+    }
+ 
+ 
+    pickImage = () => {
+        launchImageLibrary(this.options, (response) => {
+            if (!response.didCancel) {
+                this.setState({ uri: response.assets[0].uri, base64: response.assets[0].data })
             }
         })
     }
-
+ 
     save = async () => {
-        Alert.alert('Added image', this.state.comment)
+        Alert.alert('Imagem Adicionada', this.state.comment)
     }
-
+ 
     render() {
         return (
             <ScrollView>
                 <View style={styles.container}>
-                    <Text style={styles.title}>Share an image</Text>
+                    <Text style={styles.title}>Compartilhe uma imagem</Text>
                     <View style={styles.imageContainer}>
-                        <Image source={this.state.resourcePath} style={styles.image} />
+                        <Image source={{uri: this.state.uri}}
+                            style={styles.image} />                            
                     </View>
-                    <TouchableOpacity onPress={this.openCamera} style={styles.button}>
-                        <Text style={styles.buttonText}>Choose the photo</Text>
+                    <TouchableOpacity onPress={this.pickImage}
+                        style={styles.buttom}>
+                        <Text style={styles.buttomText}>Escolha a foto</Text>
                     </TouchableOpacity>
-                    <TextInput placeholder='Comment here' 
-                        style={styles.input} 
-                        value={this.state.comment}
-                        onChangeText={comment => this.setState({ comment })} 
-                    />
-                    <TouchableOpacity onPress={this.save} style={styles.button}>
-                        <Text style={styles.buttonText}>Save</Text>
+                    <TextInput placeholder='Algum comentário para a foto?'
+                        style={styles.input} value={this.state.comment}
+                        //editable={this.props.name != null}
+                        onChangeText={comment => this.setState({ comment })} />
+                    <TouchableOpacity onPress={this.save}
+                        disabled={this.props.loading}
+                        style={[styles.buttom, this.props.loading ? styles.buttonDisabled : null]}>
+                        <Text style={styles.buttomText}>Salvar</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
         )
     }
 }
-
+ 
+ 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -82,28 +125,29 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: '90%',
-        height: Dimensions.get('window').width * 3 / 4,
+        height: Dimensions.get('window').width / 2,
         backgroundColor: '#EEE',
         marginTop: 10
     },
     image: {
         width: '100%',
-        height: Dimensions.get('window').width * 3 / 4,
+        height: Dimensions.get('window').width / 2,
         resizeMode: 'center'
     },
-    button: {
+    buttom: {
         marginTop: 30,
         padding: 10,
         backgroundColor: '#4286f4'
     },
-    buttonText: {
+    buttomText: {
         fontSize: 20,
         color: '#FFF'
     },
     input: {
         marginTop: 20,
         width: '90%'
+    },
+    buttonDisabled: {
+        backgroundColor: '#AAA'
     }
 })
-
-export default AddPhoto

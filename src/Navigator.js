@@ -6,46 +6,51 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import Feed from './screens/Feed'
 import AddPhoto from './screens/AddPhoto'
 import Profile from './screens/Profile'
+import Login from './screens/Login'
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
 
-export default props => {
+function MyTabs() {
     return (
-        <NavigationContainer>
-            <Tab.Navigator
-                initialRouteName='Feed'
-                screenOptions={{
-                    tabBarShowLabel: false,
-                    //tabBarActiveTintColor: '#008',
-                    //tabBarInactiveTintColor: '#008000',
-                    headerShown: false,
-                }}
-            >
-                <Tab.Screen
-                    name='Feed' 
-                    component={Feed} 
-                    options={() => ({
-                        tabBarIcon: ({ color }) =>
-                            <Icon name='home' size={30} color={color} />
-                    })}           
-                />
-                <Tab.Screen
-                    name='AddPhoto' 
-                    component={AddPhoto}
-                    options={() => ({
-                        tabBarIcon: ({ color }) =>
-                            <Icon name='camera' size={30} color={color} />
-                    })}           
-                />
-                <Tab.Screen
-                    name='Profile' 
-                    component={Profile} 
-                    options={() => ({
-                        tabBarIcon: ({ color }) =>
-                            <Icon name='user' size={30} color={color} />
-                    })}           
-                />
-            </Tab.Navigator>
-        </NavigationContainer>
+        <Tab.Navigator
+            initialRouteName='Feed'
+            screenOptions={{
+            tabBarShowLabel: false,
+            headerShown: false,
+            }}
+        >
+        <Tab.Screen
+            name='Feed' 
+            component={Feed} 
+            options={() => ({
+                tabBarIcon: ({ color }) =>
+                    <Icon name='home' size={30} color={color} />
+        })}  
+        />
+        <Tab.Screen
+            name='AddPhoto' 
+            component={AddPhoto}
+            options={() => ({
+                tabBarIcon: ({ color }) =>
+                    <Icon name='camera' size={30} color={color} />
+            })}           
+        />
+        <Tab.Screen
+            name='Profile' 
+            component={Profile} 
+            options={() => ({
+                tabBarIcon: ({ color }) =>
+                    <Icon name='user' size={30} color={color} />
+            })}           
+        />
+        </Tab.Navigator>
+    )
+}
+
+export default function App() {
+    return (
+      <NavigationContainer>
+        <MyTabs />
+      </NavigationContainer>
     )
 }

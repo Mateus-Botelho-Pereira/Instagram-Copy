@@ -8,6 +8,7 @@ import Feed from './screens/Feed'
 import AddPhoto from './screens/AddPhoto'
 import Profile from './screens/Profile'
 import Login from './screens/Login'
+import Register from './screens/Register'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -17,6 +18,7 @@ function LoginOrProfileRouter() {
     <Stack.Navigator>
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
     </Stack.Navigator>
   )
 }
@@ -48,7 +50,7 @@ export default function App() {
             })}           
         />
         <Tab.Screen
-            name='Profile' 
+            name='ProfileTab' 
             component={LoginOrProfileRouter} 
             options={() => ({
                 tabBarIcon: ({ color }) =>
